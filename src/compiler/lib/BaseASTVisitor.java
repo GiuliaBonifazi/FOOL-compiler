@@ -1,7 +1,8 @@
 package compiler.lib;
 
 import compiler.AST.*;
-import compiler.exc.*;
+import compiler.exc.IncomplException;
+import compiler.exc.UnimplException;
 
 import static compiler.lib.FOOLlib.*;
 
@@ -29,7 +30,7 @@ public class BaseASTVisitor<S,E extends Exception> {
 	
 	public S visit(Visitable v, String mark) throws E {   //when printing marks this visit with string mark
 		if (v==null)                                      
-			if (incomplExc) throw new IncomplException(); 
+			if (incomplExc) throw new IncomplException();
 			else                                         
 				return null; 
 		if (print) {
@@ -70,7 +71,7 @@ public class BaseASTVisitor<S,E extends Exception> {
 
 	// OPERATOR EXTENSION
 
-//	public S visitNode(GreaterEqualNode n) throws E {throw new UnimplException();}
+	public S visitNode(GreaterEqualNode n) throws E {throw new UnimplException();}
 //	public S visitNode(LessEqualNode n) throws E {throw new UnimplException();}
 //	public S visitNode(NotNode n) throws E {throw new UnimplException();}
 //	public S visitNode(MinusNode n) throws E {throw new UnimplException();}

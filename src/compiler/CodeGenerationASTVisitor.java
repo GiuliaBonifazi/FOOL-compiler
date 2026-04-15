@@ -1,8 +1,9 @@
 package compiler;
 
 import compiler.AST.*;
+import compiler.exc.VoidException;
 import compiler.lib.*;
-import compiler.exc.*;
+
 import static compiler.lib.FOOLlib.*;
 
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
@@ -58,7 +59,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 				"sfp", // set $fp to popped value (Control Link)
 				"ltm", // load $tm value (function result)
 				"lra", // load $ra value
-				"js"  // jump to to popped address
+				"js"  // jump to popped address
 			)
 		);
 		return "push "+funl;		
@@ -99,8 +100,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	@Override
 	public String visitNode(EqualNode n) {
 		if (print) printNode(n);
-	 	String l1 = freshLabel();
-	 	String l2 = freshLabel();
+		String l1 = freshLabel();
+		String l2 = freshLabel();
 		return nlJoin(
 			visit(n.left),
 			visit(n.right),
@@ -112,6 +113,18 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 			l2+":"
 		);
 	}
+
+//	@Override
+//	public String visitNode(GreaterEqualNode n) {
+//	  if (print) printNode(n);
+//	  String l1 = freshLabel();
+//	  String l2 = freshLabel();
+//	  return nlJoin(
+//		  visit(n.left),
+//		  visit(n.right),
+//		  ""
+//	  )
+//	}
 
 	@Override
 	public String visitNode(TimesNode n) {

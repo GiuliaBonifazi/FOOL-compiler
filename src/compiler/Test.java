@@ -1,16 +1,18 @@
 package compiler;
 
 import java.io.*;
+
+import compiler.exc.IncomplException;
+import compiler.exc.TypeException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 import compiler.lib.*;
-import compiler.exc.*;
 import svm.*;
 
 public class Test {
     public static void main(String[] args) throws Exception {
    			
-    	String fileName = "prova.fool";
+    	String fileName = "TestGE.fool";
 
     	CharStream chars = CharStreams.fromFileName(fileName);
     	FOOLLexer lexer = new FOOLLexer(chars);
@@ -42,11 +44,11 @@ public class Test {
     		TypeNode mainType = typeCheckVisitor.visit(ast);
     		System.out.print("Type of main program expression is: ");
     		new PrintEASTVisitor().visit(mainType);
-    	} catch (IncomplException e) {    		
-    		System.out.println("Could not determine main program expression type due to errors detected before type checking.");
+    	} catch (IncomplException e) {
+			System.out.println("Could not determine main program expression type due to errors detected before type checking.");
     	} catch (TypeException e) {
-    		System.out.println("Type checking error in main program expression: "+e.text); 
-    	}       	
+    		System.out.println("Type checking error in main program expression: "+e.text);
+    	}
     	System.out.println("You had "+FOOLlib.typeErrors+" type checking errors.\n");
 
     	int frontEndErrors = lexer.lexicalErrors+parser.getNumberOfSyntaxErrors()+symtableVisitor.stErrors+FOOLlib.typeErrors;

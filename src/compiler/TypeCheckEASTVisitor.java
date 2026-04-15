@@ -1,7 +1,8 @@
 package compiler;
 
 import compiler.AST.*;
-import compiler.exc.*;
+import compiler.exc.IncomplException;
+import compiler.exc.TypeException;
 import compiler.lib.*;
 import static compiler.TypeRels.*;
 
@@ -11,7 +12,7 @@ import static compiler.TypeRels.*;
 //(- per un tipo: "null"; controlla che il tipo non sia incompleto) 
 //
 //visitSTentry(s) ritorna, per una STentry s, il tipo contenuto al suo interno
-public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException> {
+public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeException> {
 
 	TypeCheckEASTVisitor() { super(true); } // enables incomplete tree exceptions 
 	TypeCheckEASTVisitor(boolean debug) { super(true,debug); } // enables print for debugging
@@ -47,7 +48,7 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 		for (Node dec : n.declist)
 			try {
 				visit(dec);
-			} catch (IncomplException e) { 
+			} catch (IncomplException e) {
 			} catch (TypeException e) {
 				System.out.println("Type checking error in a declaration: " + e.text);
 			}
@@ -89,6 +90,16 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode,TypeException
 		TypeNode r = visit(n.right);
 		if ( !(isSubtype(l, r) || isSubtype(r, l)) )
 			throw new TypeException("Incompatible types in equal",n.getLine());
+		return new BoolTypeNode();
+	}
+
+	@Override
+	public TypeNode visitNode(GreaterEqualNode n) throws TypeException {
+		if  (print) printNode(n);
+		TypeNode l = visit(n.left);
+		TypeNode r = visit(n.right);
+		if ( !(isSubtype(l, r) || isSubtype(r, l)) )
+			throw new TypeException("Incompatible types in greater-equal",n.getLine());
 		return new BoolTypeNode();
 	}
 

@@ -2,10 +2,10 @@ package compiler;
 
 import java.util.*;
 import compiler.AST.*;
-import compiler.exc.*;
+import compiler.exc.VoidException;
 import compiler.lib.*;
 
-public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
+public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 	
 	private List<Map<String, STentry>> symTable = new ArrayList<>();
 	private int nestingLevel=0; // current nesting level
@@ -45,7 +45,7 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	public Void visitNode(FunNode n) {
 		if (print) printNode(n);
 		Map<String, STentry> hm = symTable.get(nestingLevel);
-		List<TypeNode> parTypes = new ArrayList<>();  
+		List<TypeNode> parTypes = new ArrayList<>();
 		for (ParNode par : n.parlist) parTypes.add(par.getType()); 
 		STentry entry = new STentry(nestingLevel, new ArrowTypeNode(parTypes,n.retType),decOffset--);
 		//inserimento di ID nella symtable
@@ -106,6 +106,14 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void,VoidException> {
 	
 	@Override
 	public Void visitNode(EqualNode n) {
+		if (print) printNode(n);
+		visit(n.left);
+		visit(n.right);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(GreaterEqualNode n) {
 		if (print) printNode(n);
 		visit(n.left);
 		visit(n.right);
