@@ -26,7 +26,7 @@ exp     : exp TIMES exp #times
         | exp EQ exp    #eq
         | exp GE exp    #ge
         | exp LE exp    #le
-        | NOT? exp      #not
+        | NOT exp       #not
         | exp OR exp    #or
         | exp AND exp   #and
         | LPAR exp RPAR #pars
