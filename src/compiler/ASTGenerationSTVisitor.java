@@ -88,6 +88,13 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		return n;
 	}
 
+	public Node visitLe(LeContext c) {
+		if (print) printVarAndProdName(c);
+		Node n = new LessEqualNode(visit(c.exp(0)), visit(c.exp(1)));
+		n.setLine(c.LE().getSymbol().getLine());
+		return n;
+	}
+
 	@Override
 	public Node visitVardec(VardecContext c) {
 		if (print) printVarAndProdName(c);
