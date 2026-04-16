@@ -114,6 +114,14 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 	}
 
 	@Override
+	public TypeNode visitNode(NotNode n) throws TypeException {
+		if (print) printNode(n);
+		if (!isSubtype(visit(n.exp), new BoolTypeNode()))
+			throw new TypeException("Incompatible type in not",n.getLine());
+		return new BoolTypeNode();
+	}
+
+	@Override
 	public TypeNode visitNode(TimesNode n) throws TypeException {
 		if (print) printNode(n);
 		if ( !(isSubtype(visit(n.left), new IntTypeNode())
@@ -137,6 +145,15 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 		if ( !(isSubtype(visit(n.left), new IntTypeNode())
 				&& isSubtype(visit(n.right), new IntTypeNode())) )
 			throw new TypeException("Non integers in sum",n.getLine());
+		return new IntTypeNode();
+	}
+
+	@Override
+	public TypeNode visitNode(MinusNode n) throws TypeException {
+		if (print) printNode(n);
+		if ( !(isSubtype(visit(n.left), new IntTypeNode())
+			&& isSubtype(visit(n.right), new IntTypeNode())) )
+			throw new TypeException("Non integers in subtraction",n.getLine());
 		return new IntTypeNode();
 	}
 
