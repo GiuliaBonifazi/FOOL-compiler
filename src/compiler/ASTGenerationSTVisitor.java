@@ -56,44 +56,43 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		return new ProgNode(visit(c.exp()));
 	}
 
-	@Override
-	public Node visitTimes(TimesContext c) {
-		if (print) printVarAndProdName(c);
-		Node n = new TimesNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.TIMES().getSymbol().getLine());		// setLine added
-        return n;		
-	}
+//	@Override
+//	public Node visitTimes(TimesContext c) {
+//		if (print) printVarAndProdName(c);
+//		Node n = new TimesNode(visit(c.exp(0)), visit(c.exp(1)));
+//		n.setLine(c.TIMES().getSymbol().getLine());		// setLine added
+//        return n;
+//	}
+//
+//	@Override
+//	public Node visitPlus(PlusContext c) {
+//		if (print) printVarAndProdName(c);
+//		Node n = new PlusNode(visit(c.exp(0)), visit(c.exp(1)));
+//		n.setLine(c.PLUS().getSymbol().getLine());
+//        return n;
+//	}
 
 	@Override
-	public Node visitPlus(PlusContext c) {
+	public Node visitComp(CompContext c) {
 		if (print) printVarAndProdName(c);
-		Node n = new PlusNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.PLUS().getSymbol().getLine());	
-        return n;		
-	}
-
-	@Override
-	public Node visitEq(EqContext c) {
-		if (print) printVarAndProdName(c);
-		Node n = new EqualNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.EQ().getSymbol().getLine());		
-        return n;		
-	}
-
-	@Override
-	public Node visitGe(GeContext c) {
-		if (print) printVarAndProdName(c);
-		Node n = new GreaterEqualNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.GE().getSymbol().getLine());
+		Node n;
+		if (c.LE() != null) {
+			n = new LessEqualNode(visit(c.exp(0)), visit(c.exp(1)));
+			n.setLine(c.LE().getSymbol().getLine());
+		} else if (c.EQ() != null) {
+			n = new EqualNode(visit(c.exp(0)), visit(c.exp(1)));
+			n.setLine(c.EQ().getSymbol().getLine());
+		} else {
+			n = new GreaterEqualNode(visit(c.exp(0)), visit(c.exp(1)));
+			n.setLine(c.GE().getSymbol().getLine());
+		}
 		return n;
 	}
 
-	public Node visitLe(LeContext c) {
-		if (print) printVarAndProdName(c);
-		Node n = new LessEqualNode(visit(c.exp(0)), visit(c.exp(1)));
-		n.setLine(c.LE().getSymbol().getLine());
-		return n;
-	}
+//	public Node visitNot(NotContext c) {
+//		if (print) printVarAndProdName(c);
+//
+//	}
 
 	@Override
 	public Node visitVardec(VardecContext c) {

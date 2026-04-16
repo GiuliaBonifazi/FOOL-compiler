@@ -1,4 +1,4 @@
-push 3
+push 1
 push 2
 bleq label0
 push 0
