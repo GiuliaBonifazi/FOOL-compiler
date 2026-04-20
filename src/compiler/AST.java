@@ -48,7 +48,6 @@ public class AST {
 			this.methods = methods;
 			this.id = id;
 			this.superID = null;
-			this.type = new ClassTypeNode();
 		}
 
 		@Override
@@ -296,6 +295,12 @@ public class AST {
 	}
 
 	public static class ClassTypeNode extends TypeNode {
+		final List<TypeNode> allFields;
+		final List<ArrowTypeNode> allMethods;
+		ClassTypeNode(List<TypeNode> fields, List<ArrowTypeNode> methods) {
+			allFields = Collections.unmodifiableList(fields);
+			allMethods = Collections.unmodifiableList(methods);
+		}
 
 		@Override
 		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
