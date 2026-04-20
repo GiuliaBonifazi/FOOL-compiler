@@ -32,6 +32,7 @@ dec : VAR ID COLON type ASS exp SEMIC #vardec
           SEMIC #fundec
     ;
 
+
 exp     : exp (TIMES | DIV) exp #timesDiv
         | exp (PLUS | MINUS) exp #plusMinus
         | exp (EQ | GE | LE) exp #comp

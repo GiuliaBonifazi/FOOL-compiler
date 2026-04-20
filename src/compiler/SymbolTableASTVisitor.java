@@ -40,6 +40,12 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		visit(n.exp);
 		return null;
 	}
+
+//	@Override
+//	public Void visitNode(ClassNode n) {
+//		if (print) printNode(n);
+//		Map<String, STentry> hm = symTable.(0);
+//	}
 	
 	@Override
 	public Void visitNode(FunNode n) {

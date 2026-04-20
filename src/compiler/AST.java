@@ -4,6 +4,58 @@ import java.util.*;
 import compiler.lib.*;
 
 public class AST {
+
+	public static class FieldNode extends DecNode {
+		final String id;
+		FieldNode(String fieldId, TypeNode t) {
+			id = fieldId;
+			type = t;
+		}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
+
+	public static class MethodNode extends DecNode {
+		final String id;
+		final TypeNode returnType;
+		final List<ParNode> parameters;
+		final List<DecNode> declarations;
+		final Node exp;
+		MethodNode(String i, TypeNode rt, List<ParNode> pl, List<DecNode> dl, Node e) {
+			id = i;
+			returnType = rt;
+			parameters = Collections.unmodifiableList(pl);
+			declarations = Collections.unmodifiableList(dl);
+			exp = e;
+		}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
+
+	public static class ClassNode extends DecNode {
+		final List<FieldNode> fields;
+		final List<MethodNode> methods;
+		final String id;
+		final String superID;
+		ClassNode(List<FieldNode> fields, List<MethodNode> methods, String id) {
+			this.fields = fields;
+			this.methods = methods;
+			this.id = id;
+			this.superID = null;
+			this.type = new ClassTypeNode();
+		}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
 	
 	public static class ProgLetInNode extends Node {
 		final List<DecNode> declist;
@@ -241,6 +293,32 @@ public class AST {
 
 		@Override
 		public <S,E extends Exception> S accept(BaseASTVisitor<S,E> visitor) throws E {return visitor.visitNode(this);}
+	}
+
+	public static class ClassTypeNode extends TypeNode {
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
+
+	public static class RefTypeNode extends TypeNode {
+		final String id;
+		RefTypeNode(String i) {id = i;}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
+
+	public static class EmptyTypeNode extends TypeNode {
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
 	}
 
 }
