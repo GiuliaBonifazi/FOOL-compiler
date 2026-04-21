@@ -24,6 +24,8 @@ public class AST {
 		final List<ParNode> parameters;
 		final List<DecNode> declarations;
 		final Node exp;
+		private int offset;
+
 		MethodNode(String i, TypeNode rt, List<ParNode> pl, List<DecNode> dl, Node e) {
 			id = i;
 			returnType = rt;
@@ -31,6 +33,9 @@ public class AST {
 			declarations = Collections.unmodifiableList(dl);
 			exp = e;
 		}
+
+		public void setOffset(int o) {offset = o;}
+		public int getOffset() {return this.offset;}
 
 		@Override
 		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
@@ -298,8 +303,8 @@ public class AST {
 		final List<TypeNode> allFields;
 		final List<ArrowTypeNode> allMethods;
 		ClassTypeNode(List<TypeNode> fields, List<ArrowTypeNode> methods) {
-			allFields = Collections.unmodifiableList(fields);
-			allMethods = Collections.unmodifiableList(methods);
+			allFields = fields;
+			allMethods = methods;
 		}
 
 		@Override
