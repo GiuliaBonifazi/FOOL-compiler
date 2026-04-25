@@ -1,1 +1,9 @@
-print(false&&true);
+let
+    class A (a:int, b:bool) {
+        fun n:int(c:int)
+            print(c);
+        fun m:bool(d:int)
+            print(d);
+    }
+in
+    print(1==1);

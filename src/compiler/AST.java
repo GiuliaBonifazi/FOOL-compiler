@@ -24,6 +24,7 @@ public class AST {
 		final List<ParNode> parameters;
 		final List<DecNode> declarations;
 		final Node exp;
+		String label;
 		private int offset;
 
 		MethodNode(String i, TypeNode rt, List<ParNode> pl, List<DecNode> dl, Node e) {

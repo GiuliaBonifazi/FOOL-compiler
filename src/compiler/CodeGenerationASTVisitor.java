@@ -4,6 +4,9 @@ import compiler.AST.*;
 import compiler.exc.VoidException;
 import compiler.lib.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static compiler.lib.FOOLlib.*;
 
 public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidException> {
@@ -32,6 +35,69 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 			visit(n.exp),
 			"halt"
 		);
+	}
+
+	@Override
+	public String visitNode(ClassNode n) {
+	  if (print) printNode(n);
+	  List<String> dispatchTable = new ArrayList<>();
+	  for (MethodNode method : n.methods) {
+		  visit(method);
+		  dispatchTable.add(method.getOffset(), method.label);
+	  }
+	  String dispatchTableCreation = null;
+	  for (String label : dispatchTable) {
+		  dispatchTableCreation = nlJoin(
+			  dispatchTableCreation,
+			  "push " + label, //pusho la label come secondo valore di loadw
+			  "lhp", //pusho hp come primo valore di loadw
+			  "sw", //memorizzo la label all'indirizzo in hp
+			  "lhp", //pusho hp per incrementarlo
+			  "push 1",
+			  "add", //incremento hp corrente
+			  "shp" //aggiorno hp col nuovo indirizzo
+		  );
+	  }
+	  return nlJoin(
+		  "lhp",
+		  dispatchTableCreation
+	  );
+	}
+
+	@Override
+	public String visitNode(MethodNode n) {
+	  if (print) printNode(n);
+	  String methodLabel =  freshFunLabel();
+	  String declarationCode = null;
+	  String popDeclarations = null;
+	  String popParameters = null;
+	  for (Node declaration : n.declarations) {
+		  declarationCode = nlJoin(declarationCode, visit(declaration));
+		  popDeclarations = nlJoin(popDeclarations, "pop");
+	  }
+	  for (int i = 0; i < n.parameters.size(); i++) {
+		popParameters = nlJoin(popParameters, "pop");
+	  }
+	  n.label = methodLabel;
+	  putCode(
+		  nlJoin(
+			  methodLabel + ":",
+			  "cfp",
+			  "lra",
+			  declarationCode,
+			  visit(n.exp),
+			  "stm",
+			  popDeclarations,
+			  "sra",
+			  "pop",
+			  popParameters,
+			  "sfp",
+			  "ltm",
+			  "lra",
+			  "js"
+		  )
+	  );
+	  return null;
 	}
 
 	@Override
