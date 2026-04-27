@@ -85,7 +85,6 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		decOffset = offsetBeforeMethodDecl;
 		symTable.remove(nestingLevel);
 		nestingLevel--;
-
 		return null;
 	}
 
@@ -132,6 +131,20 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		symTable.remove(nestingLevel);
 		decOffset = prevOffset;
 		nestingLevel--;
+		return null;
+	}
+
+	@Override
+	public Void visitNode(NewNode n) {
+		if (print) printNode(n);
+		STentry entry = symTable.get(0).get(n.classId);
+		if (entry == null || classTable.get(n.classId) == null) {
+			System.out.println("Class id " + n.classId + " at line " + n.getLine() + " not declared.");
+			stErrors++;
+		} else {
+			n.entry = entry;
+		}
+		for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
 	
@@ -303,6 +316,24 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 			n.entry = entry;
 			n.nl = nestingLevel;
 		}
+		return null;
+	}
+
+	@Override
+	public Void visitNode(ClassTypeNode n) {
+		if (print) printNode(n);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(EmptyTypeNode n) {
+		if (print) printNode(n);
+		return null;
+	}
+
+	@Override
+	public Void visitNode(RefTypeNode n) {
+		if (print) printNode(n, n.id);
 		return null;
 	}
 

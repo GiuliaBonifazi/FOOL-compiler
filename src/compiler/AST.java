@@ -61,6 +61,21 @@ public class AST {
 			return visitor.visitNode(this);
 		}
 	}
+
+	public static class NewNode extends Node {
+		final List<Node> arglist;
+		final String classId;
+		STentry entry;
+		public NewNode(List<Node> arglist, String id) {
+			this.arglist = Collections.unmodifiableList(arglist);
+			this.classId = id;
+		}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
 	
 	public static class ProgLetInNode extends Node {
 		final List<DecNode> declist;

@@ -3,6 +3,7 @@ package compiler;
 import compiler.AST.*;
 import compiler.exc.VoidException;
 import compiler.lib.*;
+import svm.ExecuteVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,35 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	  );
 	  return null;
 	}
+
+	@Override
+	public String visitNode(NewNode n) {
+	  if (print) printNode(n);
+	  String parameterCode = null;
+	  for (int i = 0; i < n.arglist.size(); i++)
+		  parameterCode = nlJoin(parameterCode, visit(n.arglist.get(i)));
+	  for (int i = 0; i < n.arglist.size(); i++)
+		  parameterCode = nlJoin(
+			  parameterCode, // ogni valore di parametro viene usato come 2o argomento di loadw
+			  "lhp", // $hp è il primo valore di loadw
+			  "lw", // carico valore parametro a indirizzo hp
+			  "lhp",
+			  "push 1",
+			  "add", // incremento $hp
+			  "shp" //aggiorno $hp con valore incrementato
+		  );
+	  return nlJoin(
+		parameterCode,
+		  "push " + (ExecuteVM.MEMSIZE + n.entry.offset), // pusho l'indirizzo del dispatch pointer sullo stack
+		  "lw", // leggo il contenuto dell'indirizzo in cima allo stack e lo pusho
+		  "shp", // copio indirizzo dispatch pointer in $hp
+		  "lhp", // carico su stack contenuto di $hp
+		  "lhp",
+		  "push 1",
+		  "add",
+		  "shp" // incremento $hp
+	  );
+  	}
 
 	@Override
 	public String visitNode(FunNode n) {

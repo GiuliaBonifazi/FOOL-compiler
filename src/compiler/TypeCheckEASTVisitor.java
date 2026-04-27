@@ -14,7 +14,7 @@ import static compiler.TypeRels.*;
 //visitSTentry(s) ritorna, per una STentry s, il tipo contenuto al suo interno
 public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeException> {
 
-	TypeCheckEASTVisitor() { super(true); } // enables incomplete tree exceptions 
+	TypeCheckEASTVisitor() { super(true); } // enables incomplete tree exceptions
 	TypeCheckEASTVisitor(boolean debug) { super(true,debug); } // enables print for debugging
 
 	//checks that a type object is visitable (not incomplete) 
@@ -67,10 +67,27 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 				System.out.println("Type checking error in a declaration: " + e.text);
 			}
 		}
-		if (!isSubtype(visit(n.exp), visit(n.returnType))) {
+		if (!isSubtype(visit(n.exp), n.returnType)) {
 			throw new TypeException("Wrong return type for method " + n.id, n.getLine());
 		}
 		return null;
+	}
+
+	@Override
+	public TypeNode visitNode(NewNode n) throws TypeException {
+		if (print) printNode(n);
+		TypeNode t = visit(n.entry);
+		if (!(t instanceof ClassTypeNode))
+			throw new TypeException("Invocation of a non-class " + n.classId, n.getLine());
+		ClassTypeNode classType = (ClassTypeNode) t;
+		if (!(classType.allFields.size() == n.arglist.size()))
+			throw new TypeException("Wrong number of parameters for class " + n.classId, n.getLine());
+		for (int i = 0; i < n.arglist.size(); i++) {
+			if (!isSubtype(visit(n.arglist.get(i)), classType.allFields.get(i))) {
+				throw new TypeException("Wrong type for "+(i+1)+"-th parameter in the invocation of " + n.classId, n.getLine());
+			}
+		}
+		return new RefTypeNode(n.classId);
 	}
 
 	@Override
@@ -245,6 +262,21 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 	}
 
 // gestione tipi incompleti	(se lo sono lancia eccezione)
+
+	@Override
+	public TypeNode visitNode(ClassTypeNode n) throws TypeException {
+		if (print) printNode(n);
+		for (Node field: n.allFields) visit(field);
+		visit(n.allMethods.get(0),"->");
+		for (int i = 1; i < n.allMethods.size(); i++) visit(n.allMethods.get(i));
+		return null;
+	}
+
+	@Override
+	public TypeNode visitNode(RefTypeNode n) throws TypeException {
+		if (print) printNode(n, n.id);
+		return null;
+	}
 	
 	@Override
 	public TypeNode visitNode(ArrowTypeNode n) throws TypeException {
