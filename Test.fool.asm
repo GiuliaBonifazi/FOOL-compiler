@@ -37,15 +37,18 @@ lhp
 push 1
 add
 shp
-push 1
-push 1
-beq label0
+lfp
+
+push 2
+lfp
+
+stm
+ltm
+ltm
 push 0
-b label1
-label0:
-push 1
-label1:
-print
+add
+lw
+js
 halt
 
 function0:

@@ -131,6 +131,27 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
   	}
 
 	@Override
+	public String visitNode(ClassCallNode n) {
+	  if (print) printNode(n);
+	  String argumentCode = "";
+	  for (int i = n.arglist.size() - 1; i >= 0; i--) argumentCode = nlJoin(argumentCode, visit(n.arglist.get(i)));
+	  String getAR = "";
+	  for (int i = 0; i < n.nestingLevel - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");
+	  return nlJoin(
+		  "lfp", // carica control link
+		  argumentCode, // genera e pusha codice argomenti
+		  "lfp", // carica control link per trovare activation record
+          getAR, // ricerca activation record
+          "stm", // setto $tm al valore dell'access link per duplicarlo
+          "ltm",
+          "ltm", // duplico valore in cima allo stack
+          "push " + n.methodEntry.offset, "add", //utilizzo l'offset dell'id del metodo chiamato per trovare indirizzo a cui saltare
+          "lw", // carico indirizzo
+          "js" // salto all'indirizzo
+	  );
+	}
+
+	@Override
 	public String visitNode(FunNode n) {
 		if (print) printNode(n,n.id);
 		String declCode = null, popDecl = null, popParl = null;

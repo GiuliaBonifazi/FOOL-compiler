@@ -147,6 +147,35 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
+
+	@Override
+	public Void visitNode(ClassCallNode n) {
+		if (print) printNode(n);
+		STentry objectEntry = stLookup(n.objectId);
+		if (objectEntry == null) {
+			System.out.println("Object id " + n.objectId + " at line " + n.getLine() + " not declared.");
+			stErrors++;
+		} else {
+			n.entry = objectEntry;
+			n.nestingLevel = nestingLevel;
+			TypeNode objectType = n.entry.type;
+			if (!(objectType instanceof RefTypeNode)) {
+				System.out.println("Method call on non-object " + n.objectId + " at line " + n.getLine());
+				stErrors++;
+			} else {
+				String classId = ((RefTypeNode) objectType).id;
+				STentry methodEntry = classTable.get(classId).get(n.calledId);
+				if (methodEntry == null) {
+					System.out.println("Called id " + n.calledId + " at line " + n.getLine() + " is not a method of class " + classId);
+					stErrors++;
+				} else {
+					n.methodEntry = methodEntry;
+				}
+			}
+		}
+		for (Node arg : n.arglist) visit(arg);
+		return null;
+	}
 	
 	@Override
 	public Void visitNode(FunNode n) {

@@ -250,6 +250,25 @@ public class AST {
 			return visitor.visitNode(this);
 		}
 	}
+
+	public static class ClassCallNode extends Node {
+		final String objectId;
+		final String calledId;
+		final List<Node> arglist;
+		int nestingLevel;
+		STentry entry;
+		STentry methodEntry;
+		ClassCallNode(String objectId, String calledId, List<Node> arglist) {
+			this.objectId = objectId;
+			this.calledId = calledId;
+			this.arglist = Collections.unmodifiableList(arglist);
+		}
+
+		@Override
+		public <S, E extends Exception> S accept(BaseASTVisitor<S, E> visitor) throws E {
+			return visitor.visitNode(this);
+		}
+	}
 	
 	public static class CallNode extends Node {
 		final String id;

@@ -8,4 +8,4 @@ let
     var x: int = 2;
     var test: A = new A(1, true);
 in
-    print(1==1);
+    test.n(2);
