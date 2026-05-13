@@ -111,7 +111,7 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		  parameterCode = nlJoin(
 			  parameterCode, // ogni valore di parametro viene usato come 2o argomento di loadw
 			  "lhp", // $hp è il primo valore di loadw
-			  "lw", // carico valore parametro a indirizzo hp
+			  "sw", // carico valore parametro a indirizzo hp
 			  "lhp",
 			  "push 1",
 			  "add", // incremento $hp
@@ -136,7 +136,9 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	  String argumentCode = "";
 	  for (int i = n.arglist.size() - 1; i >= 0; i--) argumentCode = nlJoin(argumentCode, visit(n.arglist.get(i)));
 	  String getAR = "";
-	  for (int i = 0; i < n.nestingLevel - n.entry.nl; i++) getAR = nlJoin(getAR, "lw");
+	  for (int i = 0; i < n.nestingLevel - n.entry.nl; i++) {
+          getAR = nlJoin(getAR, "lw");
+      }
 	  return nlJoin(
 		  "lfp", // carica control link
 		  argumentCode, // genera e pusha codice argomenti

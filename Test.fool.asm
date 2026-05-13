@@ -18,13 +18,13 @@ push 2
 push 1
 push 1
 lhp
-lw
+sw
 lhp
 push 1
 add
 shp
 lhp
-lw
+sw
 lhp
 push 1
 add
@@ -37,15 +37,13 @@ lhp
 push 1
 add
 shp
+push function2
 lfp
-
-push 2
 lfp
-
 stm
 ltm
 ltm
-push 0
+push -5
 add
 lw
 js
@@ -79,6 +77,30 @@ print
 stm
 sra
 pop
+pop
+sfp
+ltm
+lra
+js
+
+function2:
+cfp
+lra
+lfp
+
+push 2
+lfp
+
+lw
+stm
+ltm
+ltm
+push 0
+add
+lw
+js
+stm
+sra
 pop
 sfp
 ltm
