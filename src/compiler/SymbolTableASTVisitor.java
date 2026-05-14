@@ -176,6 +176,12 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		for (Node arg : n.arglist) visit(arg);
 		return null;
 	}
+
+	@Override
+	public Void visitNode(EmptyNode n) {
+		if (print) printNode(n);
+		return null;
+	}
 	
 	@Override
 	public Void visitNode(FunNode n) {

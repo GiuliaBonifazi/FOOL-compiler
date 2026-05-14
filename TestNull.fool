@@ -1,0 +1,11 @@
+let
+    class A (a:int, b:bool) {
+        fun n:int(c:int)
+            print(b);
+        fun m:int()
+            n(4);
+    }
+    var test: A = null;
+    var test2: A = null;
+in
+    print(test == test2);

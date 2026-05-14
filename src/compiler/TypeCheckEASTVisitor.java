@@ -265,6 +265,11 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 	}
 
 	@Override
+	public TypeNode visitNode(EmptyNode n) {
+		return new EmptyTypeNode();
+	}
+
+	@Override
 	public TypeNode visitNode(BoolNode n) {
 		if (print) printNode(n,n.val.toString());
 		return new BoolTypeNode();
@@ -309,6 +314,12 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 
 	@Override
 	public TypeNode visitNode(IntTypeNode n) {
+		if (print) printNode(n);
+		return null;
+	}
+
+	@Override
+	public TypeNode visitNode(EmptyTypeNode n) {
 		if (print) printNode(n);
 		return null;
 	}

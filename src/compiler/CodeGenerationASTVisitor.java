@@ -159,6 +159,12 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 	}
 
 	@Override
+	public String visitNode(EmptyNode n) {
+	  if (print) printNode(n);
+	  return "push -1";
+	}
+
+	@Override
 	public String visitNode(FunNode n) {
 		if (print) printNode(n,n.id);
 		String declCode = null, popDecl = null, popParl = null;
