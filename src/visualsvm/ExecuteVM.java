@@ -430,13 +430,10 @@ public class ExecuteVM {
                 break;
             case SVMParser.STOREW:
                 address = pop();
-                System.out.println("SECOND VALUE WILL BE STORED AT ADDRESS: " + address);
                 memory[address] = pop();
-                System.out.println("VALUE STORED AT ADDRESS " + address + ": " + memory[address]);
                 break;
             case SVMParser.LOADW:
                 int popped = pop();
-                System.out.println("PUSHED VALUE STORED AT ADDRESS: " + popped);
                 push(memory[popped]);
                 break;
             case SVMParser.BRANCH:

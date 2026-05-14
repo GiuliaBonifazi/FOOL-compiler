@@ -40,6 +40,8 @@ add
 shp
 push function2
 lfp
+push 1
+push 2
 lfp
 stm
 ltm
@@ -112,6 +114,8 @@ lw
 js
 stm
 sra
+pop
+pop
 pop
 sfp
 ltm

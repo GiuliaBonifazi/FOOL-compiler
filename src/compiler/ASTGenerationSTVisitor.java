@@ -89,7 +89,7 @@ public class ASTGenerationSTVisitor extends FOOLBaseVisitor<Node> {
 		for (MethdecContext methdec: c.methdec()) methodlist.add((MethodNode) visit(methdec));
 		List<FieldNode> fieldlist = new ArrayList<>();
 		for (int i = 1; i < c.ID().size(); i++) {
-			FieldNode field = new FieldNode(c.ID(i).getText(), (TypeNode) visit(c.type(i)));
+			FieldNode field = new FieldNode(c.ID(i).getText(), (TypeNode) visit(c.type(i-1)));
 			field.setLine(c.ID(i).getSymbol().getLine());
 			fieldlist.add(field);
 		}

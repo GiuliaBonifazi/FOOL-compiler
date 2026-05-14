@@ -7,7 +7,7 @@ let
     }
     var x: int = 2;
     var test: A = new A(1, false);
-    fun l:int()
+    fun l:int(g:int, h:bool)
         test.m();
 in
-    l();
+    l(2, true);
