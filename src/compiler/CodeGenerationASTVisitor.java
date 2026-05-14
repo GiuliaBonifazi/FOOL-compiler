@@ -121,7 +121,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		parameterCode,
 		  "push " + (ExecuteVM.MEMSIZE + n.entry.offset), // pusho l'indirizzo del dispatch pointer sullo stack
 		  "lw", // leggo il contenuto dell'indirizzo in cima allo stack e lo pusho
-		  "shp", // copio indirizzo dispatch pointer in $hp
+		  "lhp", // carico sullo stack il contenuto di hp
+		  "sw", // scrivo in memory[$hp] l'indirizzo del dispatch pointer
 		  "lhp", // carico su stack contenuto di $hp
 		  "lhp",
 		  "push 1",
@@ -149,6 +150,8 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
           "stm", // setto $tm al valore dell'access link per duplicarlo
           "ltm",
           "ltm", // duplico valore in cima allo stack
+		  "lw", // utilizzo l'access link per accedere alla dispatch table dell'oggetto chiamato
+		  // (è la modifica che abbiamo fatto in CallNode, ma stavolta è obbligatoria perché è per forza un metodo)
           "push " + n.methodEntry.offset, "add", //utilizzo l'offset dell'id del metodo chiamato per trovare indirizzo a cui saltare
           "lw", // carico indirizzo
           "js" // salto all'indirizzo
@@ -377,14 +380,24 @@ public class CodeGenerationASTVisitor extends BaseASTVisitor<String, VoidExcepti
 		String argCode = null, getAR = null;
 		for (int i=n.arglist.size()-1;i>=0;i--) argCode=nlJoin(argCode,visit(n.arglist.get(i)));
 		for (int i = 0;i<n.nl-n.entry.nl;i++) getAR=nlJoin(getAR,"lw");
-		return nlJoin(
+		String code = nlJoin(
 			"lfp", // load Control Link (pointer to frame of function "id" caller)
 			argCode, // generate code for argument expressions in reversed order
 			"lfp", getAR, // retrieve address of frame containing "id" declaration
                           // by following the static chain (of Access Links)
 			"stm", // set $tm to popped value (with the aim of duplicating top of stack)
             "ltm", // load Access Link (pointer to frame of function "id" declaration)
-            "ltm", // duplicate top of stack
+            "ltm" // duplicate top of stack
+		);
+
+		// se id è un metodo, devo utilizzare l'object pointer che ho ottenuto per trovare
+		// la dispatch table
+		if (n.entry.offset >= 0) {
+			code = nlJoin(code, "lw");
+		}
+
+		return nlJoin(
+			code,
             "push "+n.entry.offset, "add", // compute address of "id" declaration
 			"lw", // load address of "id" function
             "js"  // jump to popped address (saving address of subsequent instruction in $ra)

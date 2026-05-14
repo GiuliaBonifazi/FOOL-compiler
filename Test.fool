@@ -1,12 +1,12 @@
 let
     class A (a:int, b:bool) {
         fun n:int(c:int)
-            print(c);
+            print(b);
         fun m:int()
-            print(a);
+            n(4);
     }
     var x: int = 2;
-    var test: A = new A(1, true);
+    var test: A = new A(1, false);
     fun l:int()
         test.m();
 in

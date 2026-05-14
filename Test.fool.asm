@@ -16,7 +16,7 @@ add
 shp
 push 2
 push 1
-push 1
+push 0
 lhp
 sw
 lhp
@@ -31,7 +31,8 @@ add
 shp
 push 9998
 lw
-shp
+lhp
+sw
 lhp
 lhp
 push 1
@@ -53,7 +54,8 @@ function0:
 cfp
 lra
 lfp
-push 1
+lw
+push -2
 add
 lw
 print
@@ -70,11 +72,17 @@ function1:
 cfp
 lra
 lfp
+push 4
+lfp
 lw
-push -1
+stm
+ltm
+ltm
+lw
+push 0
 add
 lw
-print
+js
 stm
 sra
 pop
@@ -97,6 +105,7 @@ lw
 stm
 ltm
 ltm
+lw
 push 1
 add
 lw
