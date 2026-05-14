@@ -435,7 +435,9 @@ public class ExecuteVM {
                 System.out.println("VALUE STORED AT ADDRESS " + address + ": " + memory[address]);
                 break;
             case SVMParser.LOADW:
-                push(memory[pop()]);
+                int popped = pop();
+                System.out.println("PUSHED VALUE STORED AT ADDRESS: " + popped);
+                push(memory[popped]);
                 break;
             case SVMParser.BRANCH:
                 ip = fetch();

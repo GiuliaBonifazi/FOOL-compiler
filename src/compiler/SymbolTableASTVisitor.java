@@ -66,8 +66,8 @@ public class SymbolTableASTVisitor extends BaseASTVisitor<Void, VoidException> {
 		for (FieldNode field : n.fields) {
 			if (print) printNode(field);
 			STentry fieldEntry = new STentry(nestingLevel, field.getType(), fieldOffset);
+			classType.allFields.add(- fieldOffset - 1, fieldEntry.type);
 			fieldOffset--;
-			classType.allFields.add(fieldEntry.type);
 			if (virtualTable.put(field.id, fieldEntry) != null) {
 				System.out.println("Field id " + field.id + " at line " + field.getLine() + " already declared.");
 				stErrors++;

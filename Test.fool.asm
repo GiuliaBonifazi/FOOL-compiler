@@ -70,13 +70,13 @@ function1:
 cfp
 lra
 lfp
-push 1
+lw
+push -1
 add
 lw
 print
 stm
 sra
-pop
 pop
 sfp
 ltm
@@ -88,14 +88,16 @@ cfp
 lra
 lfp
 
-push 2
 lfp
 
+lw
+push -4
+add
 lw
 stm
 ltm
 ltm
-push 0
+push 1
 add
 lw
 js
