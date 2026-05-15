@@ -14,6 +14,7 @@ lhp
 push 1
 add
 shp
+push function2
 push -1
 push 2
 push 0
@@ -40,19 +41,9 @@ add
 shp
 push -1
 lfp
-push -5
+push -4
 add
 lw
-lfp
-push -3
-add
-lw
-beq label0
-push 0
-b label1
-label0:
-push 1
-label1:
 print
 halt
 
@@ -91,6 +82,19 @@ lw
 js
 stm
 sra
+pop
+sfp
+ltm
+lra
+js
+
+function2:
+cfp
+lra
+push 1
+stm
+sra
+pop
 pop
 sfp
 ltm

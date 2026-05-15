@@ -5,9 +5,9 @@ let
         fun m:int()
             n(4);
     }
-    var f: int = 4;
+    fun x: bool (a:int) true;
     var n: A = null;
     var f: A = new A(2, false);
     var g: A = null;
 in
-    print(A);
+    print(n);
