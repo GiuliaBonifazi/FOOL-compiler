@@ -161,7 +161,7 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 		if  (print) printNode(n);
 		TypeNode l = visit(n.left);
 		TypeNode r = visit(n.right);
-		if ( !(isSubtype(l, r) || isSubtype(r, l)) )
+		if (!isSubtype(l, new IntTypeNode()) || !isSubtype(r, new IntTypeNode()) )
 			throw new TypeException("Incompatible types in greater-equal",n.getLine());
 		return new BoolTypeNode();
 	}
@@ -171,7 +171,7 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 		if (print) printNode(n);
 		TypeNode l = visit(n.left);
 		TypeNode r = visit(n.right);
-		if ( !(isSubtype(l, r) || isSubtype(r, l)) )
+		if ( !isSubtype(l, new IntTypeNode()) || !isSubtype(r, new IntTypeNode()) )
 			throw new TypeException("Incompatible types in less-equal",n.getLine());
 		return new BoolTypeNode();
 	}
@@ -261,6 +261,8 @@ public class TypeCheckEASTVisitor extends BaseEASTVisitor<TypeNode, TypeExceptio
 		TypeNode t = visit(n.entry); 
 		if (t instanceof ArrowTypeNode)
 			throw new TypeException("Wrong usage of function identifier " + n.id,n.getLine());
+		else if (t instanceof ClassTypeNode)
+			throw new TypeException("Wrong usage of class identifier " + n.id,n.getLine());
 		return t;
 	}
 

@@ -1,0 +1,13 @@
+let
+    class A (a:int, b:bool) {
+        fun n:int(c:int)
+            print(b);
+        fun m:int()
+            n(4);
+    }
+    var f: int = 4;
+    var n: A = null;
+    var f: A = new A(2, false);
+    var g: A = null;
+in
+    print(A);
